@@ -10,8 +10,7 @@ Web-Development/
 ├── nasa_api/
 │   └── nasa-pic_of_the_day.py
 └── reddit_api/
-    ├── reddit_info.py
-    └── reddit_explorer.py
+    └── reddit_info.py
 ```
 
 ## Activities
