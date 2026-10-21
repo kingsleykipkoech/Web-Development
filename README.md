@@ -1,27 +1,29 @@
 # Backend Web Development - In-Class Activities & Homework
 
-This repository contains backend class activities, homework assignments, and API integrations.
+This repository organizes all daily backend activities, homework assignments, and API integrations.
 
-## Contents
+## Directory Structure
 
-- **nasa-pic_of_the_day.py**: Fetches Astronomy Picture of the Day metadata from NASA's REST API and downloads the featured image.
-- **reddit_info.py**: Command-line interface querying Reddit API for a specified subreddit. Retrieves community name, subscriber counts, rules, description, and the 10 newest posts using custom User-Agent headers.
-
-## Prerequisites
-
-- Python 3
-- requests library (`pip install requests`)
-
-## Running Scripts
-
-### NASA Picture of the Day
-Ensure a `.env` file exists with `API_NASA="YOUR_KEY"`:
-```bash
-python3 nasa-pic_of_the_day.py
+```text
+Web-Development/
+├── README.md
+├── nasa_api/
+│   └── nasa-pic_of_the_day.py
+└── reddit_api/
+    ├── reddit_info.py
+    └── reddit_explorer.py
 ```
 
-### Reddit Subreddit Explorer
-Query any subreddit:
+## Activities
+
+### 1. NASA APOD (`nasa_api/`)
+Fetches Astronomy Picture of the Day metadata from NASA's REST API and downloads the featured image.
 ```bash
-python3 reddit_info.py python
+python3 nasa_api/nasa-pic_of_the_day.py
+```
+
+### 2. Reddit API Explorer (`reddit_api/`)
+Queries the Reddit API for a specified subreddit. Retrieves community name, subscriber count, rules, description, and the 10 newest posts using custom User-Agent headers.
+```bash
+python3 reddit_api/reddit_info.py python
 ```
