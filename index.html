@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REST API & HTTP Architecture | Visual Engineering Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-badge">REST</span>
+                <span class="logo-text">Architecture & HTTP Protocol</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#wire-model">Network Wire</a>
+                <a href="#request-anatomy">Request Packet</a>
+                <a href="#response-anatomy">Response & Codes</a>
+                <a href="#url-anatomy">URL Blueprint</a>
+                <a href="#rest-patterns">REST Patterns</a>
+                <a href="#case-studies">Class Code</a>
+                <a href="#playground">Live Simulator</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <section class="hero-section">
+            <div class="section-tag">ENGINEERING REFERENCE</div>
+            <h1>Visual & Hands-On REST API Architecture</h1>
+            <p class="hero-desc">
+                A visual, ground-up architectural guide explaining how the internet, HTTP packets, status codes, and REST APIs work. Every concept is mapped to physical packets, memory diagrams, and hands-on code.
+            </p>
+        </section>
+
+        <!-- MODULE 1: THE PHYSICAL WIRE -->
+        <section id="wire-model" class="guide-card">
+            <div class="card-header">
+                <span class="step-num">01</span>
+                <div>
+                    <h2>The Physical Wire: What Happens When Code Runs</h2>
+                    <p class="card-sub">When Python runs <code>requests.get()</code>, plain-text packets travel through physical routers to the server.</p>
+                </div>
+            </div>
+
+            <div class="network-diagram-container">
+                <div class="network-node" id="node-client">
+                    <div class="node-icon client-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    </div>
+                    <div class="node-title">Client (Your Computer)</div>
+                    <div class="node-detail">Python Script<br><code>requests.get(URL)</code></div>
+                </div>
+
+                <div class="wire-track">
+                    <div class="packet-token" id="active-packet">
+                        <span id="packet-label">HTTP GET</span>
+                    </div>
+                    <div class="wire-line"></div>
+                    <div class="wire-status" id="wire-status-text">Click "Simulate Request" below to watch packet transfer</div>
+                </div>
+
+                <div class="network-node" id="node-server">
+                    <div class="node-icon server-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                    </div>
+                    <div class="node-title">Server (NASA / Reddit)</div>
+                    <div class="node-detail">Web Service<br><code>Stateless Database</code></div>
+                </div>
+            </div>
+
+            <div class="controls-row">
+                <button id="btn-run-wire" class="btn-primary">Simulate HTTP Request & Response Cycle</button>
+                <div id="cycle-step-desc" class="log-output">System idle. Ready to inspect connection.</div>
+            </div>
+        </section>
+
+        <!-- MODULE 2: REQUEST ENVELOPE -->
+        <section id="request-anatomy" class="guide-card">
+            <div class="card-header">
+                <span class="step-num">02</span>
+                <div>
+                    <h2>The Request Envelope: Plain-Text Structure</h2>
+                    <p class="card-sub">Slide 6 &amp; Week 2 Session: HTTP is a plain-text conversation with three strict sections.</p>
+                </div>
+            </div>
+
+            <div class="verb-selector-bar">
+                <span class="selector-label">Inspect Verb Packet:</span>
+                <button class="verb-btn active" data-verb="GET">GET (Read)</button>
+                <button class="verb-btn" data-verb="POST">POST (Create)</button>
+                <button class="verb-btn" data-verb="PUT">PUT (Update)</button>
+                <button class="verb-btn" data-verb="DELETE">DELETE (Remove)</button>
+            </div>
+
+            <div class="packet-envelope-grid">
+                <div class="envelope-box">
+                    <div class="envelope-section-title">
+                        <span class="tag-badge badge-blue">Section 1</span>
+                        <span>Request Line (Verb + Resource Path + Protocol)</span>
+                    </div>
+                    <div class="code-preview" id="preview-request-line">
+                        <span class="syntax-keyword" id="disp-verb">GET</span> 
+                        <span class="syntax-string" id="disp-path">/r/python/about.json</span> 
+                        <span class="syntax-meta">HTTP/1.1</span>
+                    </div>
+
+                    <div class="envelope-section-title" style="margin-top: 1rem;">
+                        <span class="tag-badge badge-amber">Section 2</span>
+                        <span>Headers (Metadata: Identity, Auth, Content Formats)</span>
+                    </div>
+                    <div class="code-preview" id="preview-headers">
+Host: www.reddit.com
+User-Agent: python:subreddit.assignment:v1.0 (by /u/kingsleykipkoech)
+Accept: application/json
+Connection: close</div>
+
+                    <div class="envelope-section-title" style="margin-top: 1rem;">
+                        <span class="tag-badge badge-purple">Section 3</span>
+                        <span id="disp-body-title">Body / Content (Payload Data)</span>
+                    </div>
+                    <div class="code-preview" id="preview-body">
+<span class="syntax-comment">[EMPTY FOR GET REQUESTS - GET ONLY READS DATA]</span></div>
+                </div>
+
+                <div class="verb-details-panel">
+                    <h3 id="panel-verb-title">HTTP GET Method</h3>
+                    <p id="panel-verb-desc">The GET method requests a representation of the specified resource. Requests using GET should only retrieve data and have no other effect.</p>
+                    
+                    <div class="matrix-card">
+                        <div class="matrix-row">
+                            <span>Request Has Body:</span>
+                            <span class="matrix-val val-no" id="mat-body">No</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span>Safe (No Data Mutation):</span>
+                            <span class="matrix-val val-yes" id="mat-safe">Yes</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span>Idempotent (Repeatable):</span>
+                            <span class="matrix-val val-yes" id="mat-idem">Yes</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span>Cacheable by Proxies:</span>
+                            <span class="matrix-val val-yes" id="mat-cache">Yes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE 3: RESPONSE ENVELOPE & STATUS CODES -->
+        <section id="response-anatomy" class="guide-card">
+            <div class="card-header">
+                <span class="step-num">03</span>
+                <div>
+                    <h2>The Response Envelope &amp; Status Codes</h2>
+                    <p class="card-sub">Slide 11 &amp; 14: Never assume success. The first line tells you if the server accepted your request.</p>
+                </div>
+            </div>
+
+            <div class="status-category-grid">
+                <div class="status-badge-card status-2xx active" data-code="200">
+                    <div class="status-digit">200</div>
+                    <div class="status-name">OK (Success)</div>
+                    <div class="status-desc">Server fulfilled request cleanly.</div>
+                </div>
+                <div class="status-badge-card status-2xx" data-code="201">
+                    <div class="status-digit">201</div>
+                    <div class="status-name">Created</div>
+                    <div class="status-desc">New resource successfully stored.</div>
+                </div>
+                <div class="status-badge-card status-3xx" data-code="301">
+                    <div class="status-digit">301</div>
+                    <div class="status-name">Moved</div>
+                    <div class="status-desc">Resource has moved permanently.</div>
+                </div>
+                <div class="status-badge-card status-4xx" data-code="401">
+                    <div class="status-digit">401</div>
+                    <div class="status-name">Unauthorized</div>
+                    <div class="status-desc">Missing API key or token.</div>
+                </div>
+                <div class="status-badge-card status-4xx" data-code="403">
+                    <div class="status-digit">403</div>
+                    <div class="status-name">Forbidden</div>
+                    <div class="status-desc">Reddit blocks automated scripts.</div>
+                </div>
+                <div class="status-badge-card status-4xx" data-code="404">
+                    <div class="status-digit">404</div>
+                    <div class="status-name">Not Found</div>
+                    <div class="status-desc">Endpoint does not exist.</div>
+                </div>
+                <div class="status-badge-card status-5xx" data-code="500">
+                    <div class="status-digit">500</div>
+                    <div class="status-name">Server Error</div>
+                    <div class="status-desc">Remote server code crashed.</div>
+                </div>
+            </div>
+
+            <div class="response-inspector-box">
+                <div class="inspector-header">
+                    <span>Response Packet Preview: <strong id="selected-code-label">HTTP/1.1 200 OK</strong></span>
+                    <span class="tag-badge badge-green" id="selected-type-badge">2xx SUCCESS</span>
+                </div>
+                <div class="code-preview" id="preview-response-packet">HTTP/1.1 200 OK
+Date: Wed, 21 Oct 2026 03:00:00 GMT
+Server: gunicorn / nginx
+Content-Type: application/json; charset=utf-8
+Content-Length: 384
+
+{
+  "title": "NGC 5139 Globular Cluster",
+  "media_type": "image",
+  "hdurl": "https://assets.science.nasa.gov/.../NGC5139.jpg"
+}</div>
+                <div class="pro-tip-banner">
+                    <strong>Rule from Slide 14:</strong> "Never assume a request succeeded! Always check <code>response.status_code == 200</code> before trying to read data."
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE 4: URL ANATOMY -->
+        <section id="url-anatomy" class="guide-card">
+            <div class="card-header">
+                <span class="step-num">04</span>
+                <div>
+                    <h2>Anatomy of a URL &amp; Query String</h2>
+                    <p class="card-sub">Slide 7: Every resource on the internet has a unique locator composed of exact blocks.</p>
+                </div>
+            </div>
+
+            <div class="url-blocks-container">
+                <div class="url-part-box part-proto" data-info="Protocol: Tells the network to use encrypted HTTP communication (port 443).">
+                    <span class="part-label">Protocol</span>
+                    <span class="part-code">https://</span>
+                </div>
+                <div class="url-part-box part-sub" data-info="Subdomain: Routes to NASA's specific scientific web cluster.">
+                    <span class="part-label">Subdomain</span>
+                    <span class="part-code">science.</span>
+                </div>
+                <div class="url-part-box part-domain" data-info="Domain: Identifies the registered institution or organization host.">
+                    <span class="part-label">Domain</span>
+                    <span class="part-code">nasa.</span>
+                </div>
+                <div class="url-part-box part-tld" data-info="Top Level Domain: Government / institutional top-level registry.">
+                    <span class="part-label">TLD</span>
+                    <span class="part-code">gov</span>
+                </div>
+                <div class="url-part-box part-path" data-info="Resource Path: The noun directory addressing the exact APOD API resource on the server.">
+                    <span class="part-label">Resource Path</span>
+                    <span class="part-code">/wp-json/wp/v2/apod-basic/</span>
+                </div>
+                <div class="url-part-box part-query" data-info="Query String: Key-value parameters passed after '?' separated by '&'. Used for authentication and limits.">
+                    <span class="part-label">Query String</span>
+                    <span class="part-code">?api_key=81dG...&amp;format=json</span>
+                </div>
+            </div>
+
+            <div class="url-info-display" id="url-info-box">
+                Hover or click any block above to inspect what it tells the network router and web server.
+            </div>
+        </section>
+
+        <!-- MODULE 5: REST PATTERNS VS ANTI-PATTERNS -->
+        <section id="rest-patterns" class="guide-card">
+            <div class="card-header">
+                <span class="step-num">05</span>
+                <div>
+                    <h2>Clean REST Design vs. Anti-Patterns</h2>
+                    <p class="card-sub">Slide 14 &amp; 15: URLs are nouns (resources). The HTTP verb is the action.</p>
+                </div>
+            </div>
+
+            <div class="patterns-grid">
+                <div class="pattern-col col-bad">
+                    <div class="col-title bad-title">
+                        <span>Anti-Pattern (Bad RPC Style)</span>
+                    </div>
+                    <div class="pattern-item">
+                        <code>POST /createBook</code>
+                        <span class="reason">Bad: Uses verb in URL</span>
+                    </div>
+                    <div class="pattern-item">
+                        <code>POST /updateBook?id=4</code>
+                        <span class="reason">Bad: Uses action in directory path</span>
+                    </div>
+                    <div class="pattern-item">
+                        <code>POST /deleteBookById</code>
+                        <span class="reason">Bad: Clutters namespace with methods</span>
+                    </div>
+                    <div class="pattern-item">
+                        <code>GET /getAllProfiles</code>
+                        <span class="reason">Bad: Redundant verb</span>
+                    </div>
+                </div>
+
+                <div class="pattern-col col-good">
+                    <div class="col-title good-title">
+                        <span>Good RESTful Design (Clean Nouns)</span>
+                    </div>
+                    <div class="pattern-item">
+                        <code>POST /books</code>
+                        <span class="reason">Good: POST creates in collection</span>
+                    </div>
+                    <div class="pattern-item">
+                        <code>PUT /books/4</code>
+                        <span class="reason">Good: PUT updates ID 4 directly</span>
+                    </div>
+                    <div class="pattern-item">
+                        <code>DELETE /books/4</code>
+                        <span class="reason">Good: DELETE removes ID 4</span>
+                    </div>
+                    <div class="pattern-item">
+                        <code>GET /books</code>
+                        <span class="reason">Good: GET reads collection</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stateless-box">
+                <h3>Slide 19: Rule Number One — Statelessness</h3>
+                <p>
+                    <strong>"As far as the REST-server is concerned, every call is the first call."</strong><br>
+                    The server does not store session cookies or remember your past requests. You must send your <code>User-Agent</code> or <code>api_key</code> with <strong>every single call</strong>.
+                </p>
+            </div>
+        </section>
+
+        <!-- MODULE 6: CASE STUDIES (CLASS SCRIPTS) -->
+        <section id="case-studies" class="guide-card">
+            <div class="card-header">
+                <span class="step-num">06</span>
+                <div>
+                    <h2>Class Scripts Deconstructed</h2>
+                    <p class="card-sub">How our two Python scripts implement these exact slide rules in real code.</p>
+                </div>
+            </div>
+
+            <div class="cases-tabs">
+                <button class="case-tab active" data-case="nasa">NASA APOD Script (Binary Image Download)</button>
+                <button class="case-tab" data-case="reddit">Reddit Explorer (Headers &amp; Status Handling)</button>
+            </div>
+
+            <div class="case-content" id="case-view">
+                <!-- Injected via JavaScript -->
+            </div>
+        </section>
+
+        <!-- MODULE 7: INTERACTIVE PLAYGROUND -->
+        <section id="playground" class="guide-card">
+            <div class="card-header">
+                <span class="step-num">07</span>
+                <div>
+                    <h2>Live HTTP Packet Sandbox</h2>
+                    <p class="card-sub">Test real HTTP packets, inspect the response status, headers, and payload.</p>
+                </div>
+            </div>
+
+            <div class="playground-layout">
+                <div class="playground-form">
+                    <div class="form-group">
+                        <label>Endpoint Preset:</label>
+                        <select id="preset-selector" class="custom-select">
+                            <option value="nasa">NASA Science APOD (GET JSON + Image)</option>
+                            <option value="reddit">Reddit r/Python (GET Metadata with User-Agent)</option>
+                            <option value="post-book">Create Library Book (POST JSON Payload)</option>
+                            <option value="delete-book">Delete Library Book (DELETE Verb)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Target URL:</label>
+                        <input type="text" id="play-url" class="custom-input" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Request Headers:</label>
+                        <textarea id="play-headers" class="custom-textarea" rows="4" readonly></textarea>
+                    </div>
+
+                    <div class="form-group" id="group-play-body" style="display: none;">
+                        <label>Request Body (JSON):</label>
+                        <textarea id="play-body" class="custom-textarea" rows="4" readonly></textarea>
+                    </div>
+
+                    <button id="btn-fire-play" class="btn-primary" style="width: 100%;">Execute HTTP Request</button>
+                </div>
+
+                <div class="playground-results">
+                    <div class="results-header">
+                        <span>Server Response Packet</span>
+                        <span id="play-status-pill" class="tag-badge badge-green">Ready</span>
+                    </div>
+                    <pre class="code-preview" id="play-response-out" style="min-height: 280px;">Click "Execute HTTP Request" to see server response.</pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-bar">
+        <div class="footer-container">
+            <span>Web Development Architecture Guide</span>
+            <span>Based on Patrick Savalle REST API &amp; ALU Week 2 Session Curriculum</span>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
